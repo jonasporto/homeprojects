@@ -30,5 +30,49 @@ App::uses('Controller', 'Controller');
  * @package		app.Controller
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
+
+
+
 class AppController extends Controller {
+
+	var $components = array('Auth','Session','Cookie');
+
+
+	public $helpers = array(  
+		'Html' => array('className' => 'BootstrapHtml'),  
+		'Form' => array('className' => 'BootstrapForm'),  
+		'Paginator' => array('className' => 'BootstrapPaginator'),  
+); 
+
+
+	function beforeFilter(){
+ 		Security::setHash('sha256'); 
+ 		 $this->Auth->authError = 'Area Restrita! Efetue login!'; // Mensagem ao entrar em area restrita
+		 $this->Auth->loginError = 'Nome de usuario ou senha não conferem!'; // Mensagem quando não se autenticar
+		 $this->Auth->userModel = 'User';
+		 
+		 $this->Auth->loginRedirect = array('action' => 'index', 
+		 									'controller' => 'offers');
+		
+		$this->Auth->fields = array('username' => 'email', 'password' => 'pasword');
+		$this->Auth->loginAction = array(
+		'controller' => 'users',
+   		 'action' => 'login'
+	);
+		
+				$this->set('user',$this->Auth->user('username'));
+
+	}
+
+	function successMessage($msg){
+	  return $this->Session->setFlash($msg,'default', array('class' => 'alert alert-block alert-success'));
+	}
+
+	function errorMessage($msg){
+	  return $this->Session->setFlash($msg,'default', array('class' => 'alert alert-block alert-danger'));
+	}
+
+
+
+
 }
