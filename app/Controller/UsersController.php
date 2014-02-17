@@ -127,6 +127,5 @@ public function beforeFilter(){
 	 function logout(){
  		return $this->redirect($this->Auth->logout()); 
 	}
-
 }
 
